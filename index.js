@@ -1,4 +1,28 @@
 require("dotenv").config();
+
+const axios = require("axios");
+const cron = require("node-cron");
+const fs = require("fs");
+
+const WEBHOOK_URL = process.env.WEBHOOK_URL;
+
+async function getShop() {
+    try {
+        const response = await axios.get("https://fortnite-api.com/v2/shop/br");
+        return response.data.data;
+    } catch (err) {
+        console.log("Error obteniendo tienda:", err.message);
+        return null;
+    }
+}
+
+async function sendShop(shopData) {
+    try {
+
+        const hash = shopData.hash;
+
+        let oldHash = "";
+
         if (fs.existsSync("lastshop.txt")) {
             oldHash = fs.readFileSync("lastshop.txt", "utf8");
         }
@@ -10,21 +34,15 @@ require("dotenv").config();
 
         fs.writeFileSync("lastshop.txt", hash);
 
-        const image = shopData.image;
-
         const payload = {
             username: "Fortnite Shop",
-            avatar_url: "https://cdn2.unrealengine.com/fortnite-logo-1920x1080-1920x1080-1e5f2d9b8a33.png",
             embeds: [
                 {
                     title: "🛒 Tienda diaria de Fortnite",
-                    description: "La tienda ha sido actualizada.",
+                    description: "La tienda fue actualizada.",
                     color: 5763719,
                     image: {
-                        url: image
-                    },
-                    footer: {
-                        text: "Actualización automática"
+                        url: shopData.image
                     }
                 }
             ],
@@ -43,7 +61,7 @@ require("dotenv").config();
             ]
         };
 
-        await axios.post(WEBHOOK_URL, payload);
+        await axios.post(WEBHOOK_URL + "?wait=true", payload);
 
         console.log("Tienda enviada correctamente.");
 
@@ -53,6 +71,7 @@ require("dotenv").config();
 }
 
 async function checkShop() {
+
     console.log("Revisando tienda...");
 
     const shop = await getShop();
@@ -64,6 +83,6 @@ async function checkShop() {
 
 checkShop();
 
-cron.schedule("*/30 * * * *", () => {
-    checkShop();
+cron.schedule("*/30 * * * *", async () => {
+    await checkShop();
 });
