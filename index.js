@@ -77,7 +77,7 @@ async function sendShop(shopData) {
             username: "Fortnite Item Shop",
 
             avatar_url:
-"https://cdn2.unrealengine.com/fortnite-logo-1920x1080-1920x1080-1e5f2d9b8a33.png",
+"https://imgur.com/IVM8VaD.png",
 
             embeds: [
                 {
