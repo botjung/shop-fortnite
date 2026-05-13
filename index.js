@@ -8,7 +8,7 @@ const WEBHOOK_URL = process.env.WEBHOOK_URL;
 
 async function getShop() {
     try {
-        const response = await axios.get("https://fortnite-api.com/v2/shop/br");
+        const response = await axios.get("https://fortnite-api.com/v2/shop");
         return response.data.data;
     } catch (err) {
         console.log("Error obteniendo tienda:", err.message);
