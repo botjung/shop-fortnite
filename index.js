@@ -36,32 +36,32 @@ async function sendShop(shopData) {
 
         const payload = {
             username: "Fortnite Shop",
+            avatar_url: "https://cdn2.unrealengine.com/fortnite-logo-1920x1080-1920x1080-1e5f2d9b8a33.png",
+
+            content:
+`🛒 **Tienda diaria de Fortnite actualizada**
+
+🔗 Ver tienda completa:
+https://www.fortnite.com/item-shop`,
+
             embeds: [
                 {
-                    title: "🛒 Tienda diaria de Fortnite",
-                    description: "La tienda fue actualizada.",
+                    title: "Tienda diaria de Fortnite",
+                    description: "La tienda ya fue actualizada.",
                     color: 5763719,
+
                     image: {
-                        url: shopData.image
+                        url: "https://media.fortniteapi.io/images/shop.png"
+                    },
+
+                    footer: {
+                        text: "Actualización automática"
                     }
-                }
-            ],
-            components: [
-                {
-                    type: 1,
-                    components: [
-                        {
-                            type: 2,
-                            style: 5,
-                            label: "Ver tienda completa",
-                            url: "https://www.fortnite.com/item-shop"
-                        }
-                    ]
                 }
             ]
         };
 
-        await axios.post(WEBHOOK_URL + "?wait=true", payload);
+        await axios.post(WEBHOOK_URL, payload);
 
         console.log("Tienda enviada correctamente.");
 
