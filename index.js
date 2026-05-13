@@ -7,6 +7,7 @@ const fs = require("fs");
 const WEBHOOK_URL = process.env.WEBHOOK_URL;
 
 async function getShop() {
+
     try {
 
         const response = await axios.get(
@@ -35,6 +36,7 @@ async function sendShop(shopData) {
         let oldHash = "";
 
         if (fs.existsSync("lastshop.txt")) {
+
             oldHash = fs.readFileSync(
                 "lastshop.txt",
                 "utf8"
@@ -55,40 +57,52 @@ async function sendShop(shopData) {
             hash
         );
 
-        const today = new Date()
-            .toISOString()
-            .split("T")[0];
+        const today = new Date();
 
-        const shopImage =
-`https://api.nitestats.com/v1/shop/image?language=es`;
+        const fecha = today.toLocaleDateString(
+            "es-MX",
+            {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric"
+            }
+        );
+
+        // Imagen oficial de Fortnite-API
+        const shopImage = shopData.imageUrl;
 
         const payload = {
 
-            username: "Fortnite Shop",
+            username: "Fortnite Item Shop",
 
             avatar_url:
 "https://cdn2.unrealengine.com/fortnite-logo-1920x1080-1920x1080-1e5f2d9b8a33.png",
 
-            content:
-`# 🛒 Tienda diaria de Fortnite
-
-📅 ${today}
-
-🔗 https://www.fortnite.com/item-shop`,
-
             embeds: [
                 {
                     title:
-"Ver tienda completa",
+"🛒 Tienda Diaria de Fortnite",
 
                     description:
-"La tienda diaria ya fue actualizada.",
+`📅 **${fecha}**
+
+✨ La tienda ya fue actualizada.
+
+🔗 [Ver tienda oficial](https://www.fortnite.com/item-shop)`,
 
                     color: 5763719,
 
                     image: {
                         url: shopImage
-                    }
+                    },
+
+                    footer: {
+                        text:
+"Actualización automática • Powered by Fortnite-API.com"
+                    },
+
+                    timestamp: new Date()
                 }
             ]
         };
@@ -124,8 +138,10 @@ async function checkShop() {
     await sendShop(shop);
 }
 
+// Revisar al iniciar
 checkShop();
 
+// Revisar cada 30 minutos
 cron.schedule(
     "*/30 * * * *",
     async () => {
@@ -134,3 +150,4 @@ cron.schedule(
 
     }
 );
+     
