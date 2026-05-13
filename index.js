@@ -17,6 +17,7 @@ async function getShop() {
 }
 
 async function sendShop(shopData) {
+
     try {
 
         const hash = shopData.hash;
@@ -34,24 +35,31 @@ async function sendShop(shopData) {
 
         fs.writeFileSync("lastshop.txt", hash);
 
+        const shopImage =
+`https://bot.fnbr.co/shop-image/fnbr-shop-${hash}.png`;
+
         const payload = {
             username: "Fortnite Shop",
-            avatar_url: "https://cdn2.unrealengine.com/fortnite-logo-1920x1080-1920x1080-1e5f2d9b8a33.png",
+
+            avatar_url:
+"https://cdn2.unrealengine.com/fortnite-logo-1920x1080-1920x1080-1e5f2d9b8a33.png",
 
             content:
-`🛒 **Tienda diaria de Fortnite actualizada**
+`# 🛒 Tienda diaria de Fortnite
 
-🔗 Ver tienda completa:
+## 🔗 Ver tienda oficial
 https://www.fortnite.com/item-shop`,
 
             embeds: [
                 {
-                    title: "Tienda diaria de Fortnite",
-                    description: "La tienda ya fue actualizada.",
+                    title: "Tienda actualizada",
+                    description:
+"Ya está disponible la nueva tienda diaria.",
+
                     color: 5763719,
 
                     image: {
-                        url: "https://media.fortniteapi.io/images/shop.png"
+                        url: shopImage
                     },
 
                     footer: {
@@ -66,7 +74,11 @@ https://www.fortnite.com/item-shop`,
         console.log("Tienda enviada correctamente.");
 
     } catch (err) {
-        console.log("Error enviando tienda:", err.message);
+
+        console.log(
+            "Error enviando tienda:",
+            err.response?.data || err.message
+        );
     }
 }
 
