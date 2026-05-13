@@ -43,6 +43,22 @@ async function sendShop(shopData) {
             );
         }
 
+        // Si no existe archivo aún, guardar hash y NO enviar mensaje
+        if (!oldHash) {
+
+            fs.writeFileSync(
+                "lastshop.txt",
+                hash
+            );
+
+            console.log(
+                "Hash guardado por primera vez."
+            );
+
+            return;
+        }
+
+        // Si la tienda no cambió
         if (hash === oldHash) {
 
             console.log(
@@ -52,6 +68,7 @@ async function sendShop(shopData) {
             return;
         }
 
+        // Guardar nuevo hash
         fs.writeFileSync(
             "lastshop.txt",
             hash
@@ -69,7 +86,6 @@ async function sendShop(shopData) {
             }
         );
 
-        // Imagen oficial de Fortnite-API
         const shopImage = shopData.imageUrl;
 
         const payload = {
@@ -113,7 +129,7 @@ async function sendShop(shopData) {
         );
 
         console.log(
-            "Tienda enviada correctamente."
+            "Nueva tienda enviada."
         );
 
     } catch (err) {
@@ -138,9 +154,6 @@ async function checkShop() {
     await sendShop(shop);
 }
 
-// Revisar al iniciar
-checkShop();
-
 // Revisar cada 30 minutos
 cron.schedule(
     "*/30 * * * *",
@@ -150,4 +163,6 @@ cron.schedule(
 
     }
 );
-     
+
+// Primera revisión SIN enviar mensaje
+checkShop();
